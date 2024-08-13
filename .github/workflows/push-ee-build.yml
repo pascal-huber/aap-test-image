@@ -11,6 +11,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       length: ${{ steps.set-matrix.outputs.length }}
+
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
@@ -64,19 +65,19 @@ jobs:
           echo "EE=${{ matrix.ee }}" >> $GITHUB_ENV
           echo "IMAGE_TAG=latest" >> $GITHUB_ENV
 
-      - name: Log in to quay.io
-        uses: redhat-actions/podman-login@v1
-        with:
-          registry: quay.io
-          username: ${{ secrets.REDHAT_USERNAME }}
-          password: ${{ secrets.REDHAT_PASSWORD }}
+      # - name: Log in to quay.io
+      #   uses: redhat-actions/podman-login@v1
+      #   with:
+      #     registry: quay.io
+      #     username: ${{ secrets.REDHAT_USERNAME }}
+      #     password: ${{ secrets.REDHAT_PASSWORD }}
 
-      - name: Log in to registry.redhat.io
-        uses: redhat-actions/podman-login@v1
-        with:
-          registry: registry.redhat.io
-          username: ${{ secrets.REDHAT_USERNAME }}
-          password: ${{ secrets.REDHAT_PASSWORD }}
+      # - name: Log in to registry.redhat.io
+      #   uses: redhat-actions/podman-login@v1
+      #   with:
+      #     registry: registry.redhat.io
+      #     username: ${{ secrets.REDHAT_USERNAME }}
+      #     password: ${{ secrets.REDHAT_PASSWORD }}
 
       - name: Substitute token for automation hub
         run: |
@@ -125,14 +126,34 @@ jobs:
           name: commands-${{ matrix.ee }}
           path: ${{ matrix.ee }}/commands-${{ matrix.ee }}.txt
 
-      - name: Push To quay.io
+      # - name: Push To quay.io
+      #   uses: redhat-actions/push-to-registry@v2
+      #   with:
+      #     image: ${{ env.EE }}
+      #     tags: ${{ env.IMAGE_TAG }} ${{ github.sha }}
+      #     registry: quay.io/${{ secrets.QUAY_USER }}/
+      #     username: ${{ secrets.REDHAT_USERNAME }}
+      #     password: ${{ secrets.REDHAT_PASSWORD }}
+
+
+      - name: Push To GHCR
+        # source: https://github.com/redhat-actions/push-to-registry/blob/main/.github/workflows/ghcr-push.yaml
         uses: redhat-actions/push-to-registry@v2
+        # uses: ./
+        id: push
         with:
           image: ${{ env.EE }}
+          # image: ${{ steps.build_image.outputs.image }}
           tags: ${{ env.IMAGE_TAG }} ${{ github.sha }}
-          registry: quay.io/${{ secrets.QUAY_USER }}/
-          username: ${{ secrets.REDHAT_USERNAME }}
-          password: ${{ secrets.REDHAT_PASSWORD }}
+          # tags: ${{ steps.build_image.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+          # registry: ${{ env.IMAGE_REGISTRY }}
+          username: ${{ github.actor }}
+          # username: ${{ env.REGISTRY_USER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          # password: ${{ env.REGISTRY_PASSWORD }}
+          extra-args: |
+            --disable-content-trust
 
       - name: Print summary
         run: |
