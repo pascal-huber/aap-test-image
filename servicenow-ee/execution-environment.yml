@@ -8,24 +8,39 @@ images:
     # name: registry.redhat.io/ansible-automation-platform-24/ee-minimal-rhel8:latest
 
 dependencies:
-    galaxy: ansible-collections.yml
-    python: python-packages.txt
+    #system: bindep.txt
+    #system:
+    #  - python3.12
+    python_interpreter:
+      # (optional) provide the name of an OS package to install
+      package_system: python3.12
+      # (optional) provide the path of the Python interpreter to use for everything else.
+      # defaults to /usr/bin/python3; we'll do some sanity checking with this later...
+      python_path: /usr/bin/python3.12
+    galaxy:
+        collections:
+          - community.hashi_vault
+    # python: python-packages.txt
     ansible_core:
-      package_pip: ansible==2.16.0
+      package_pip: ansible-core==2.16.0
     ansible_runner:
-      package_pip: ansible-runner==2.4.0
+      package_pip: ansible-runner
 
 additional_build_files:
     # Can be used to resolve collections from private automation hub
     - src: ansible.cfg
       dest: configs
 
-options:
-    package_manager_path: /usr/bin/microdnf
+        #options:
+        #package_manager_path: /usr/bin/microdnf
 
 additional_build_steps:
     prepend_base:
-        - RUN $PYCMD -m pip install --upgrade pip setuptools
+        - RUN $PKGMGR install -y python3.12 python3.12-pip
+        - RUN $PYCMD -m pip install --upgrade pip
+        # - RUN $PYCMD -m pip install wheel
+        # - RUN $PYCMD -m pip install --upgrade pip setuptools
+        #- RUN $PYCMD -m pip install --upgrade pip
     prepend_galaxy:
         # Add custom ansible.cfg which defines collection install sources
         - ADD _build/configs/ansible.cfg /etc/ansible/ansible.cfg
