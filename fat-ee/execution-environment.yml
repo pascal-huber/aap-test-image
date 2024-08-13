@@ -14,7 +14,6 @@ dependencies:
     galaxy:
         collections:
           - community.hashi_vault
-    # python: python-packages.txt
     ansible_core:
       package_pip: ansible-core==2.16.0
     ansible_runner:
@@ -25,17 +24,11 @@ additional_build_files:
     - src: ansible.cfg
       dest: configs
 
-#options:
-#  package_manager_path: /usr/bin/microdnf
-
 additional_build_steps:
     prepend_base:
         # TODO: find out how to install python nicely
         - RUN $PKGMGR install -y python3.12 python3.12-pip
         - RUN $PYCMD -m pip install --upgrade pip
-        # - RUN $PYCMD -m pip install wheel
-        # - RUN $PYCMD -m pip install --upgrade pip setuptools
-        #- RUN $PYCMD -m pip install --upgrade pip
     prepend_galaxy:
         # Add custom ansible.cfg which defines collection install sources
         - ADD _build/configs/ansible.cfg /etc/ansible/ansible.cfg
