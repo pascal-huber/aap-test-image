@@ -146,7 +146,7 @@ jobs:
           # image: ${{ steps.build_image.outputs.image }}
           tags: ${{ env.IMAGE_TAG }} ${{ github.sha }}
           # tags: ${{ steps.build_image.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
+          registry: ${{ env.IMAGE_REGISTRY }}
           # registry: ${{ env.IMAGE_REGISTRY }}
           username: ${{ github.actor }}
           # username: ${{ env.REGISTRY_USER }}
