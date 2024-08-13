@@ -5,9 +5,6 @@ images:
     name: registry.hub.docker.com/rockylinux/rockylinux:latest
 
 dependencies:
-    #system: bindep.txt
-    #system:
-    #  - python3.12
     python_interpreter:
       # (optional) provide the name of an OS package to install
       package_system: python3.12

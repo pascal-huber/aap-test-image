@@ -146,11 +146,12 @@ jobs:
           # image: ${{ steps.build_image.outputs.image }}
           tags: ${{ env.IMAGE_TAG }} ${{ github.sha }}
           # tags: ${{ steps.build_image.outputs.tags }}
-          registry: ${{ env.IMAGE_REGISTRY }}
+          registry: ghcr.io/${{ github.repository_owner }}
           # registry: ${{ env.IMAGE_REGISTRY }}
           username: ${{ github.actor }}
           # username: ${{ env.REGISTRY_USER }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          # password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ github.token }}
           # password: ${{ env.REGISTRY_PASSWORD }}
           extra-args: |
             --disable-content-trust
