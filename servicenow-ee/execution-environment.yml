@@ -2,10 +2,7 @@
 version: 3
 images:
   base_image:
-    # name: quay.io/ansible/ansible-runner:stable-2.10-devel:latest
-    # name: registry.hub.docker.com/alpinelinux/ansible:latest
     name: registry.hub.docker.com/rockylinux/rockylinux:latest
-    # name: registry.redhat.io/ansible-automation-platform-24/ee-minimal-rhel8:latest
 
 dependencies:
     #system: bindep.txt
